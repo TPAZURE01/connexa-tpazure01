@@ -236,8 +236,10 @@ O agente lê as Tasks do Azure Boards por MCP. As instruções que ele segue est
 
 | Caminho | Agente | Servidor MCP | Arquivo |
 |---|---|---|---|
-| 1 | GitHub Copilot no VS Code | Remoto, com login da conta institucional | `.vscode/mcp.json` — conexões `ado-planejamento` (escrita) e `ado-leitura` (somente leitura) |
-| 2 | Codex no VS Code | Local, via `npx` (requer Node.js 20+) | `.codex/config.toml` |
+| 1 | GitHub Copilot no VS Code | Local, via `npx`, com login pelo Azure CLI | `.vscode/mcp.json` — conexão `ado` |
+| 2 | Codex no VS Code | Local, via `npx`, com login pelo Azure CLI (requer Node.js 20+) | `.codex/config.toml` |
+
+**Login (nos dois caminhos):** no terminal do Codespace, rode `az login --use-device-code --allow-no-subscriptions` com a conta institucional e reinicie o VS Code. O servidor remoto (`mcp.dev.azure.com`) não é usado porque o login dele falha no VS Code estável com `AADSTS9010010`. Se aparecer `TF400813` e você pertencer a mais de um tenant, acrescente `"--tenant", "<id-do-tenant>"` aos `args`.
 
 Os detalhes de cada caminho, os prompts de referência e o protocolo de falha estão no roteiro da Atividade de Sprint.
 
@@ -289,6 +291,7 @@ A Parte 1 do roteiro da Atividade de Sprint (Etapas 3 e 4) detalha estes passos.
 | `dotnet ef` não é reconhecido | Na pasta `backend/`, rode `dotnet tool restore` |
 | O lint acusa importação restrita | Importe a feature pelo `index.ts` (`@/features/<feature>`) e use o alias `@/` |
 | A interface mostra "O back-end não está respondendo" | Suba a API em outro terminal: `cd backend && dotnet run --project src/Connexa.Api` |
+| `Unable to sign in ... AADSTS9010010` ao conectar no Azure Boards | Bug do servidor remoto no VS Code estável. Use a configuração local do `.vscode/mcp.json` e faça `az login --use-device-code --allow-no-subscriptions` |
 | Porta 5432 ocupada na máquina local | Outro PostgreSQL está instalado. Pare-o ou troque a porta publicada no `docker-compose.yml` e use `CONNEXA_DB_PORTA` |
 
 ---
